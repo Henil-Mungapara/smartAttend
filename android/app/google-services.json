@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "259927600486",
+    "project_id": "smartattend-f9f81",
+    "storage_bucket": "smartattend-f9f81.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259927600486:android:9248fe0443b9e335406ca7",
+        "android_client_info": {
+          "package_name": "com.example.smartattend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjjhu0FlNei0-W2ttNVT0WgdXTGgtAMJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
