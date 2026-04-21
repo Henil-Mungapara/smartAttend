@@ -76,7 +76,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      // Role-based navigation
       if (role == "student") {
         Navigator.pushAndRemoveUntil(
           context,

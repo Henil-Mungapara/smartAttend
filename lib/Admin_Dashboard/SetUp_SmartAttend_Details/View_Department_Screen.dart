@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:smartattend/Admin_Dashboard/Admin_Main_Navigation_Screen.dart';
 import 'package:smartattend/app_size/app_size.dart';
 
 class ViewDepartmentScreen extends StatefulWidget {
@@ -14,7 +13,6 @@ class _ViewDepartmentScreenState extends State<ViewDepartmentScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String _searchQuery = "";
 
-  // Map for caching college names by ID
   Map<String, String> _collegeNames = {};
 
   @override
@@ -30,6 +28,63 @@ class _ViewDepartmentScreenState extends State<ViewDepartmentScreen> {
     });
   }
 
+  Future<void> _deleteDepartment(String id) async {
+    await _firestore.collection('departments').doc(id).delete();
+    if(mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Department Deleted Successfully")));
+    }
+  }
+
+  void _confirmDelete(String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Department"),
+        content: const Text("Are you sure you want to delete this department?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteDepartment(id);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
+  void _showEditDialog(DocumentSnapshot doc) {
+    final nameController = TextEditingController(text: doc['name']);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Edit Department"),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(labelText: "Department Name"),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0047AB)),
+            onPressed: () async {
+              await _firestore.collection('departments').doc(doc.id).update({
+                'name': nameController.text.trim(),
+              });
+              if(mounted) Navigator.pop(context);
+              if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Department Updated Successfully")));
+            },
+            child: const Text("Update", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +94,7 @@ class _ViewDepartmentScreenState extends State<ViewDepartmentScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Goes back to previous screen
+            if (mounted) Navigator.pop(context); 
           },
         ),
         title: const Text(
@@ -52,26 +107,24 @@ class _ViewDepartmentScreenState extends State<ViewDepartmentScreen> {
         children: [
           Padding(
             padding: EdgeInsets.all(AppSize.width(context) * 0.04),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search by Department Name or Code",
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF0047AB)),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 14,
-                  horizontal: 16,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value.toLowerCase();
-                });
-              },
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: "Search by Department Name or Code",
+                  prefixIcon: Icon(Icons.search, color: Color(0xFF0047AB)),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+              ),
             ),
           ),
           Expanded(
@@ -166,24 +219,12 @@ class _ViewDepartmentScreenState extends State<ViewDepartmentScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Color(0xFF0047AB),
-                                size: 28,
-                              ),
-                              onPressed: () {
-                                // TODO: Implement edit functionality
-                              },
+                              icon: const Icon(Icons.edit, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _showEditDialog(doc),
                             ),
                             IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Color(0xFF0047AB),
-                                size: 28,
-                              ),
-                              onPressed: () {
-                                // TODO: Implement delete functionality
-                              },
+                              icon: const Icon(Icons.delete, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _confirmDelete(doc.id),
                             ),
                           ],
                         ),

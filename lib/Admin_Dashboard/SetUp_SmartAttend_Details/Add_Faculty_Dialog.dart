@@ -42,7 +42,6 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
     fetchColleges();
   }
 
-  // ================= FETCH DATA =================
   Future<void> fetchColleges() async {
     final snapshot = await _firestore.collection('colleges').get();
     setState(() {
@@ -108,12 +107,11 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
     });
   }
 
-  // ================= SAVE =================
   Future<void> saveFaculty() async {
     if (!_formKey.currentState!.validate() ||
         selectedClassIds.isEmpty ||
         selectedSubjectIds.isEmpty) {
-      UIHelper.showSnackBar(context, "Please complete all selections");
+      if (mounted) UIHelper.showSnackBar(context, "Please complete all selections");
       return;
     }
 
@@ -138,15 +136,14 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      Navigator.pop(context);
-      UIHelper.showSnackBar(context, "Faculty Added Successfully");
+      if (mounted) Navigator.pop(context);
+      if (mounted) UIHelper.showSnackBar(context, "Faculty Added Successfully");
     } catch (e) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Error: $e");
+      if (mounted) UIHelper.showSnackBar(context, "Error: $e");
     }
   }
 
-  // ================= UI =================
   @override
   Widget build(BuildContext context) {
     final screenHeight = AppSize.height(context);
@@ -155,20 +152,17 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
     return Dialog(
       backgroundColor: const Color(0xFFF5F7FA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Header
+              
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -187,7 +181,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? Padding(
@@ -210,7 +204,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: codeController,
@@ -220,7 +214,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: emailController,
@@ -231,7 +225,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                             ),
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: passwordController,
@@ -242,7 +236,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                             ),
                             obscureText: true,
                           ),
-                          SizedBox(height: screenHeight * 0.03),
+                          SizedBox(height: 24),
 
                           UIHelper.customTextField(
                             controller: phoneController,
@@ -253,9 +247,8 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                             ),
                             keyboardType: TextInputType.number,
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// College Dropdown
                           buildDropdown(
                             title: "Select College",
                             value: selectedCollegeId,
@@ -265,9 +258,8 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                               if (val != null) fetchDepartments(val);
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Department Dropdown
                           buildDropdown(
                             title: "Select Department",
                             value: selectedDepartmentId,
@@ -277,9 +269,8 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                               if (val != null) fetchClasses(val);
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Classes Multi-Select
                           buildMultiSelect(
                             title: "Select Classes",
                             items: classes,
@@ -287,15 +278,13 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                             onChanged: (ids) {
                               setState(() => selectedClassIds = ids);
 
-                              // Call async safely
                               Future.microtask(() async {
                                 await fetchSubjects(ids);
                               });
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Subjects Multi-Select
                           buildMultiSelect(
                             title: "Select Subjects",
                             items: subjects,
@@ -306,7 +295,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                         ],
                       ),
                     ),
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               if (!_isSaving)
                 Row(
@@ -314,7 +303,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                     Expanded(
                       child: SizedBox(
                         height:
-                            screenHeight * 0.065, // Fix height for both buttons
+                            screenHeight * 0.065, 
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
@@ -323,7 +312,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             padding: EdgeInsets
-                                .zero, // Remove internal padding since height is fixed
+                                .zero, 
                           ),
                           child: const Text(
                             "Cancel",
@@ -332,10 +321,10 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                         ),
                       ),
                     ),
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: 16),
                     Expanded(
                       child: SizedBox(
-                        height: screenHeight * 0.065, // Same height as Cancel
+                        height: screenHeight * 0.065, 
                         child: UIHelper.customButton(
                           text: "Save",
                           onPressed: saveFaculty,
@@ -351,7 +340,6 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
     );
   }
 
-  // ================= Dropdown & MultiSelect remain same =================
   Widget buildDropdown({
     required String title,
     required String? value,
@@ -420,7 +408,7 @@ class _AddFacultyDialogState extends State<AddFacultyDialog> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Header
+                        
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: 12),

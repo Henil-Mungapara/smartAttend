@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../app_size/app_size.dart';
 import '../utils/UiHelper.dart';
+import 'Generate_Attendance_Dialog.dart';
 
 class GenerateAttendanceScreen extends StatefulWidget {
   const GenerateAttendanceScreen({super.key});
@@ -12,58 +14,69 @@ class GenerateAttendanceScreen extends StatefulWidget {
 }
 
 class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
-  String? _qrData;
-  Timer? _qrUpdateTimer;
+  String? _activeSessionId;
+  Map<String, dynamic>? _sessionData;
   Timer? _countdownTimer;
   int _secondsRemaining = 0;
 
-  // Selected values (simulated static for this screen, can be dynamic later)
-  final String _subject = "Flutter Development";
-  final String _semester = "3rd Semester";
-
   @override
   void dispose() {
-    _qrUpdateTimer?.cancel();
     _countdownTimer?.cancel();
     super.dispose();
   }
 
-  void _generateQRCode() {
-    _updateQrData();
+  void _openGenerateDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return GenerateAttendanceDialog(
+          onSessionCreated: (sessionId, sessionData) {
+            setState(() {
+              _activeSessionId = sessionId;
+              _sessionData = sessionData;
+              _secondsRemaining = sessionData['qrDurationSeconds'] ?? 60;
+            });
+            _startTimer();
+          },
+        );
+      },
+    );
+  }
 
-    // Cancel existing timers if any
-    _qrUpdateTimer?.cancel();
+  void _startTimer() {
     _countdownTimer?.cancel();
-
-    // Timer to regenerate QR code every 60 seconds
-    _qrUpdateTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      _updateQrData();
-    });
-
-    // Timer to update countdown every second
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
           if (_secondsRemaining > 0) {
             _secondsRemaining--;
           } else {
-            _secondsRemaining = 60; // Reset countdown just in case
+            _countdownTimer?.cancel();
+            _deactivateSession();
           }
         });
       }
     });
-
-    UIHelper.showSnackBar(context, "QR Code Generated Successfully!");
   }
 
-  void _updateQrData() {
-    if (mounted) {
-      setState(() {
-        // Dynamic data with timestamp to ensure the QR code changes
-        final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-        _qrData = "Subject: $_subject | Semester: $_semester | ID: $timestamp";
-        _secondsRemaining = 60; // Reset countdown
-      });
+  Future<void> _deactivateSession() async {
+    if (_activeSessionId != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('attendance_sessions')
+            .doc(_activeSessionId)
+            .update({'isActive': false});
+        if (mounted) {
+          UIHelper.showSnackBar(context, "Session Ended!");
+          setState(() {
+            _activeSessionId = null;
+            _sessionData = null;
+          });
+        }
+      } catch (e) {
+        
+      }
     }
   }
 
@@ -74,10 +87,7 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Generate Qr Code',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Generate Qr Code', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: const Color(0xFF0047AB),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -90,44 +100,24 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
             children: [
               SizedBox(height: h * 0.03),
 
-              // ── Title ──
-              Text(
-                "Generate Attendance QR",
-                style: TextStyle(
-                  fontSize: w * 0.055,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text("Generate Attendance QR", style: TextStyle(fontSize: w * 0.055, fontWeight: FontWeight.bold)),
               SizedBox(height: h * 0.005),
               Text(
-                "Select your class details and generate a QR code",
+                _activeSessionId == null 
+                   ? "Configure session details to create attendance QR" 
+                   : "Active Session Running. Ask students to scan.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: w * 0.032, color: Colors.black54),
               ),
-
               SizedBox(height: h * 0.03),
 
-              // ── Select Subject ──
-              _dropdownCard(
-                icon: Icons.menu_book_rounded,
-                label: "Select Subject",
-                value: _subject,
-                w: w, h: h,
-              ),
+              if (_activeSessionId != null && _sessionData != null) ...[
+                 _infoCard("Subject ID", _sessionData!['subjectId'] ?? "Unknown", Icons.menu_book, w, h),
+                 SizedBox(height: h * 0.015),
+                 _infoCard("Class ID", _sessionData!['classId'] ?? "Unknown", Icons.class_, w, h),
+                 SizedBox(height: h * 0.035),
+              ],
 
-              SizedBox(height: h * 0.015),
-
-              // ── Select Semester ──
-              _dropdownCard(
-                icon: Icons.class_rounded,
-                label: "Select Semester",
-                value: _semester,
-                w: w, h: h,
-              ),
-
-              SizedBox(height: h * 0.035),
-
-              // ── QR Preview Area ──
               Container(
                 height: h * 0.3,
                 width: h * 0.3,
@@ -136,43 +126,31 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: const Color(0xFF0047AB).withAlpha(51), width: 2),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(10),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
+                    BoxShadow(color: Colors.black.withAlpha(10), blurRadius: 8, offset: const Offset(0, 4)),
                   ],
                 ),
                 child: Stack(
                   children: [
                     Center(
-                      child: _qrData == null
+                      child: _activeSessionId == null
                           ? Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  Icons.qr_code_2_rounded,
-                                  size: w * 0.2,
-                                  color: const Color(0xFF0047AB).withAlpha(51),
-                                ),
+                                Icon(Icons.qr_code_2_rounded, size: w * 0.2, color: const Color(0xFF0047AB).withAlpha(51)),
                                 SizedBox(height: h * 0.008),
-                                Text(
-                                  "QR Preview",
-                                  style: TextStyle(fontSize: w * 0.03, color: Colors.black38),
-                                ),
+                                Text("No Active Session", style: TextStyle(fontSize: w * 0.03, color: Colors.black38)),
                               ],
                             )
                           : Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: QrImageView(
-                                data: _qrData!,
+                                data: "$_activeSessionId|${_sessionData!['qrToken']}",
                                 version: QrVersions.auto,
                                 size: h * 0.25,
                                 backgroundColor: Colors.white,
                               ),
                             ),
                     ),
-                    // Corner decorations
                     Positioned(top: 0, left: 0, child: _corner(true, true)),
                     Positioned(top: 0, right: 0, child: _corner(true, false)),
                     Positioned(bottom: 0, left: 0, child: _corner(false, true)),
@@ -180,50 +158,32 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
                   ],
                 ),
               ),
-
               SizedBox(height: h * 0.02),
 
-              // ── Timer Text ──
-              if (_qrData != null)
+              if (_activeSessionId != null)
                 Text(
-                  "QR regenerates in $_secondsRemaining seconds",
+                  "Session Expires In: ${_secondsRemaining ~/ 60}:${(_secondsRemaining % 60).toString().padLeft(2, '0')}",
                   style: TextStyle(
-                    fontSize: w * 0.035,
+                    fontSize: w * 0.04,
                     fontWeight: FontWeight.bold,
                     color: _secondsRemaining <= 10 ? Colors.red : Colors.green.shade700,
                   ),
                 ),
-
               SizedBox(height: h * 0.035),
 
-              // ── Generate Button ──
-              UIHelper.customButton(
-                text: _qrData == null ? "Generate QR Code" : "Regenerate Now",
-                onPressed: _generateQRCode,
-              ),
-
-              SizedBox(height: h * 0.025),
-
-              // ── Info Note ──
-              Container(
-                padding: EdgeInsets.all(w * 0.04),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0047AB).withAlpha(15),
-                  borderRadius: BorderRadius.circular(12),
+              if (_activeSessionId == null)
+                UIHelper.customButton(text: "Generate New QR", onPressed: _openGenerateDialog),
+              
+              if (_activeSessionId != null)
+                OutlinedButton(
+                  onPressed: _deactivateSession,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.red),
+                    padding: EdgeInsets.symmetric(vertical: h * 0.015, horizontal: w * 0.1),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
+                  ),
+                  child: const Text("End Session Early", style: TextStyle(color: Colors.red, fontSize: 16)),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline_rounded, color: const Color(0xFF0047AB), size: w * 0.05),
-                    SizedBox(width: w * 0.03),
-                    Expanded(
-                      child: Text(
-                        "QR code changes automatically every minute for maximum security.",
-                        style: TextStyle(fontSize: w * 0.03, color: const Color(0xFF0047AB)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
               SizedBox(height: h * 0.04),
             ],
@@ -233,35 +193,18 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
     );
   }
 
-  // ── Dropdown-style Selection Card ──
-  Widget _dropdownCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required double w,
-    required double h,
-  }) {
+  Widget _infoCard(String label, String value, IconData icon, double w, double h) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.016),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: Colors.white, borderRadius: BorderRadius.circular(14),
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(13), blurRadius: 6, offset: const Offset(0, 3))],
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0047AB).withAlpha(20),
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: BoxDecoration(color: const Color(0xFF0047AB).withAlpha(20), borderRadius: BorderRadius.circular(10)),
             child: Icon(icon, color: const Color(0xFF0047AB), size: w * 0.05),
           ),
           SizedBox(width: w * 0.035),
@@ -275,17 +218,14 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
               ],
             ),
           ),
-          Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black38, size: w * 0.06),
         ],
       ),
     );
   }
 
-  // ── Corner Decoration ──
   Widget _corner(bool isTop, bool isLeft) {
     return Container(
-      width: 24,
-      height: 24,
+      width: 24, height: 24,
       decoration: BoxDecoration(
         border: Border(
           top: isTop ? const BorderSide(color: Color(0xFF0047AB), width: 3) : BorderSide.none,

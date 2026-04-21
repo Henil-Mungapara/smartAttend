@@ -24,14 +24,10 @@ class _Admin_ManageStudents_ScreenState
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
 
-
-
-      /// 🔹 BODY
       body: Column(
         children: [
           SizedBox(height: height * 0.02),
 
-          /// 🔹 SEARCH BAR
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
             child: TextField(
@@ -62,7 +58,6 @@ class _Admin_ManageStudents_ScreenState
 
           SizedBox(height: height * 0.02),
 
-          /// 🔹 STUDENT LIST
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore
@@ -165,13 +160,12 @@ class _Admin_ManageStudents_ScreenState
                           ),
                         ),
 
-                        /// 🔹 TRAILING UPDATE + DELETE
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
                               onPressed: () {
-                                // Update logic here
+                                
                               },
                               icon: Icon(
                                 Icons.edit,
@@ -181,7 +175,7 @@ class _Admin_ManageStudents_ScreenState
                             ),
                             IconButton(
                               onPressed: () {
-                                // Delete logic here
+                                
                               },
                               icon: Icon(
                                 Icons.delete,
@@ -201,7 +195,6 @@ class _Admin_ManageStudents_ScreenState
         ],
       ),
 
-      /// 🔹 FAB
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF0047AB),
         onPressed: () {

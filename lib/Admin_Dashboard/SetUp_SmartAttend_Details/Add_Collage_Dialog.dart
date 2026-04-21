@@ -38,20 +38,17 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
     return Dialog(
       backgroundColor: const Color(0xFFB6BFCA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// HEADER
+              
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -70,13 +67,11 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                 ),
               ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.05,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: const CircularProgressIndicator(
                         color: Color(0xFF0047AB),
                       ),
@@ -94,7 +89,7 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: codeController,
@@ -105,7 +100,7 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: cityController,
@@ -116,7 +111,7 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: emailController,
@@ -128,7 +123,7 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: contactController,
@@ -143,12 +138,12 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                       ),
                     ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               if (!_isSaving)
                 Row(
                   children: [
-                    /// Cancel Button (same design kept)
+                    
                     Expanded(
                       child: SizedBox(
                         height: AppSize.height(context) * 0.065,
@@ -171,11 +166,11 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                       ),
                     ),
 
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: 16),
 
                     Expanded(
                       child: SizedBox(
-                        height: AppSize.height(context) * 0.065, // SAME HEIGHT
+                        height: AppSize.height(context) * 0.065, 
                         child: UIHelper.customButton(
                           text: "Save",
                           onPressed: () async {
@@ -210,7 +205,7 @@ class _AddCollegeDialogState extends State<AddCollegeDialog> {
                                 'createdAt': FieldValue.serverTimestamp(),
                               });
 
-                              Navigator.pop(context);
+                              if (mounted) Navigator.pop(context);
                               UIHelper.showSnackBar(
                                 context,
                                 "College Created Successfully",

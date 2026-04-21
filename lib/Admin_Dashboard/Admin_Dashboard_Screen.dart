@@ -8,7 +8,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: SafeArea(
@@ -20,7 +19,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
 
               SizedBox(height: h * 0.012),
 
-              // ── Welcome Header ──
               Center(
                 child: Column(
                   children: [
@@ -42,7 +40,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
 
               SizedBox(height: h * 0.015),
 
-              // ── Stats Grid (2x2) ──
               Row(
                 children: [
                   _statCard(Icons.people_rounded, "Total Students", "350", Colors.blue, w, h),
@@ -61,7 +58,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
 
               SizedBox(height: h * 0.015),
 
-              // ── Today's Overview Card ──
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: w * 0.04, vertical: h * 0.012),
@@ -104,7 +100,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
 
               SizedBox(height: h * 0.018),
 
-              // ── College Info Section ──
               Text(
                 "College Info",
                 style: TextStyle(fontSize: w * 0.04, fontWeight: FontWeight.bold),
@@ -132,7 +127,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
     );
   }
 
-  // ── Stat Card ──
   Widget _statCard(IconData icon, String label, String value, Color color, double w, double h) {
     return Expanded(
       child: Container(
@@ -176,7 +170,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
     );
   }
 
-  // ── Overview Stat (inside blue card) ──
   Widget _overviewStat(String label, String value, double w) {
     return Column(
       children: [
@@ -187,7 +180,6 @@ class Admin_Dashboard_Screen extends StatelessWidget {
     );
   }
 
-  // ── College Info Tile ──
   Widget _infoTile(IconData icon, String title, String subtitle, Color color, double w, double h) {
     return Container(
       margin: EdgeInsets.only(bottom: h * 0.006),

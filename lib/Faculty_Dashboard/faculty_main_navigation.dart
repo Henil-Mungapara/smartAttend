@@ -34,8 +34,8 @@ class _FacultyMainNavigationState
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF0047AB), // Blue background
-        selectedItemColor: Colors.white,          // Selected icon/text
+        backgroundColor: const Color(0xFF0047AB), 
+        selectedItemColor: Colors.white,          
         unselectedItemColor: Colors.white70,
         onTap: (index) {
           setState(() {

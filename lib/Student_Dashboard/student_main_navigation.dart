@@ -5,7 +5,6 @@ import 'Student_Dashboard_Screen.dart';
 import 'Student_Profile_Screen.dart';
 import 'Scan_Qr_Screen.dart';
 
-
 class StudentMainNavigation extends StatefulWidget {
   const StudentMainNavigation({super.key});
 
@@ -34,9 +33,9 @@ class _StudentMainNavigationState extends State<StudentMainNavigation> {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        backgroundColor: const Color(0xFF0047AB), // Blue background
-        selectedItemColor: Colors.white,          // Selected icon/text
-        unselectedItemColor: Colors.white70,      // Unselected icon/text
+        backgroundColor: const Color(0xFF0047AB), 
+        selectedItemColor: Colors.white,          
+        unselectedItemColor: Colors.white70,      
         selectedLabelStyle: TextStyle(fontSize: w * 0.035),
         unselectedLabelStyle: TextStyle(fontSize: w * 0.032),
         type: BottomNavigationBarType.fixed,

@@ -1,0 +1,60 @@
+Analyzing admin_dashboard...                                    
+
+   info - The file name 'Admin_AttendanceReport_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_AttendanceReport_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_AttendanceReport_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_AttendanceReport_Screen.dart:4:7 - camel_case_types
+   info - The file name 'Admin_Dashboard_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_Dashboard_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_Dashboard_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_Dashboard_Screen.dart:4:7 - camel_case_types
+   info - The file name 'Admin_Main_Navigation_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_Main_Navigation_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_Main_Navigation_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_Main_Navigation_Screen.dart:10:7 - camel_case_types
+   info - The type name '_Admin_Main_Navigation_ScreenState' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_Main_Navigation_Screen.dart:18:7 - camel_case_types
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\admin_dashboard\Admin_Main_Navigation_Screen.dart:40:12 - deprecated_member_use
+   info - The file name 'Admin_ManageFaculty_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_ManageFaculty_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_ManageFaculty_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_ManageFaculty_Screen.dart:6:7 - camel_case_types
+   info - The type name '_Admin_ManageFaculty_ScreenState' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_ManageFaculty_Screen.dart:14:7 - camel_case_types
+   info - The file name 'Admin_ManageStudents_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_ManageStudents_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_ManageStudents_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_ManageStudents_Screen.dart:6:7 - camel_case_types
+   info - The type name '_Admin_ManageStudents_ScreenState' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_ManageStudents_Screen.dart:14:7 - camel_case_types
+   info - The file name 'Admin_Profile_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_Profile_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_Profile_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_Profile_Screen.dart:9:7 - camel_case_types
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\Admin_Profile_Screen.dart:50:7 - use_build_context_synchronously
+warning - The value of the local variable 'w' isn't used - lib\admin_dashboard\Admin_Profile_Screen.dart:69:19 - unused_local_variable
+   info - The file name 'Admin_SetUp_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\Admin_SetUp_Screen.dart:1:1 - file_names
+   info - The type name 'Admin_SetUp_Screen' isn't an UpperCamelCase identifier - lib\admin_dashboard\Admin_SetUp_Screen.dart:16:7 - camel_case_types
+   info - Unnecessary 'const' keyword - lib\admin_dashboard\Admin_SetUp_Screen.dart:45:26 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\admin_dashboard\Admin_SetUp_Screen.dart:47:28 - unnecessary_const
+   info - The file name 'Add_Class_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Class_Dialog.dart:1:1 - file_names
+   info - Statements in an if should be enclosed in a block - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Class_Dialog.dart:47:7 - curly_braces_in_flow_control_structures
+warning - The value of the local variable 'screenWidth' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Class_Dialog.dart:74:12 - unused_local_variable
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Class_Dialog.dart:145:29 - deprecated_member_use
+   info - The file name 'Add_Collage_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:1:1 - file_names
+warning - The value of the local variable 'screenHeight' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:35:12 - unused_local_variable
+warning - The value of the local variable 'screenWidth' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:36:12 - unused_local_variable
+   info - Don't use 'BuildContext's across async gaps - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:190:33 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:208:58 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:210:33 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Collage_Dialog.dart:216:33 - use_build_context_synchronously
+   info - The file name 'Add_Department_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Department_Dialog.dart:1:1 - file_names
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Department_Dialog.dart:108:27 - deprecated_member_use
+   info - The file name 'Add_Division_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Division_Dialog.dart:1:1 - file_names
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Division_Dialog.dart:144:29 - deprecated_member_use
+   info - The file name 'Add_Faculty_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Faculty_Dialog.dart:1:1 - file_names
+warning - The value of the local variable 'screenWidth' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Faculty_Dialog.dart:150:11 - unused_local_variable
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Faculty_Dialog.dart:350:7 - deprecated_member_use
+   info - The file name 'Add_Student_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Student_Dialog.dart:1:1 - file_names
+warning - The value of the local variable 'screenWidth' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Student_Dialog.dart:169:11 - unused_local_variable
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Student_Dialog.dart:371:7 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Student_Dialog.dart:423:7 - deprecated_member_use
+   info - The file name 'Add_Subject_Dialog.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Subject_Dialog.dart:1:1 - file_names
+warning - The value of the local variable 'screenHeight' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Subject_Dialog.dart:105:12 - unused_local_variable
+warning - The value of the local variable 'screenWidth' isn't used - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Subject_Dialog.dart:106:12 - unused_local_variable
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Subject_Dialog.dart:179:29 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\admin_dashboard\SetUp_SmartAttend_Details\Add_Subject_Dialog.dart:219:29 - deprecated_member_use
+   info - The file name 'View_Class_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Class_Screen.dart:1:1 - file_names
+   info - The file name 'View_Collage_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Collage_Screen.dart:1:1 - file_names
+   info - Don't use 'BuildContext's across async gaps - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Collage_Screen.dart:18:26 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Collage_Screen.dart:68:44 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Collage_Screen.dart:69:38 - use_build_context_synchronously
+   info - The file name 'View_Department_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Department_Screen.dart:1:1 - file_names
+   info - The file name 'View_Division_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Division_Screen.dart:1:1 - file_names
+   info - The file name 'View_Subject_Screen.dart' isn't a lower_case_with_underscores identifier - lib\admin_dashboard\SetUp_SmartAttend_Details\View_Subject_Screen.dart:1:1 - file_names
+

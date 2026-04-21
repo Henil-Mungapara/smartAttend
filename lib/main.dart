@@ -10,7 +10,6 @@ import 'package:smartattend/firebase_option_file/firebase_options.dart';
 
 import 'Faculty_Dashboard/faculty_main_navigation.dart';
 
-
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -22,8 +21,6 @@ void main()async{
 class SmartAttend extends StatelessWidget {
   const SmartAttend({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,14 +29,9 @@ class SmartAttend extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF3C9FB9),
       ),
-      home: FacultyMainNavigation(),
+      home: SplashScreen(),
 
     );
   }
 }
-
-
-
-
-
 

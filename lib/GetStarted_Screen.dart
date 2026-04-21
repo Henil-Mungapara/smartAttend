@@ -22,7 +22,7 @@ class GetStartedPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Top content (Animation + Text)
+              
               SizedBox(height: screenHeight * 0.005),
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -61,7 +61,6 @@ class GetStartedPage extends StatelessWidget {
                 ],
               ),
 
-              // Bottom Button
               SizedBox(
                 width: double.infinity,
                 height: screenHeight * 0.065,

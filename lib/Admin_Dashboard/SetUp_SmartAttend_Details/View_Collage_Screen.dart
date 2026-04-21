@@ -13,7 +13,6 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String _searchQuery = "";
 
-  /// 🔹 Delete College
   Future<void> deleteCollege(String id) async {
     await _firestore.collection('colleges').doc(id).delete();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -21,7 +20,6 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
     );
   }
 
-  /// 🔹 Edit College Dialog
   void showEditDialog(DocumentSnapshot doc) {
     final nameController = TextEditingController(text: doc['name']);
     final cityController = TextEditingController(text: doc['city']);
@@ -67,7 +65,7 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
                   'city': cityController.text.trim(),
                   'email': emailController.text.trim(),
                 });
-                Navigator.pop(context);
+                if (mounted) Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("College Updated Successfully")),
                 );
@@ -80,7 +78,6 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
     );
   }
 
-  /// 🔹 Delete Confirmation
   void confirmDelete(String id) {
     showDialog(
       context: context,
@@ -99,7 +96,7 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
               ),
               onPressed: () {
                 deleteCollege(id);
-                Navigator.pop(context);
+                if (mounted) Navigator.pop(context);
               },
               child: const Text("Delete"),
             )
@@ -113,7 +110,6 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
   Widget build(BuildContext context) {
     double w = AppSize.width(context);
     double h = AppSize.height(context);
-
     return Scaffold(
       backgroundColor: const Color(0xFFB6BFCA),
       appBar: AppBar(
@@ -128,7 +124,7 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
       ),
       body: Column(
         children: [
-          /// 🔹 Search Bar
+          
           Padding(
             padding: EdgeInsets.all(w * 0.04),
             child: Container(
@@ -154,7 +150,6 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
             ),
           ),
 
-          /// 🔹 College List
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore
@@ -248,19 +243,12 @@ class _ViewCollegeScreenState extends State<ViewCollegeScreen> {
                           MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(
-                                  Icons.edit,
-                                  color:
-                                  Color(0xFF0047AB)),
-                              onPressed: () =>
-                                  showEditDialog(doc),
+                              icon: const Icon(Icons.edit, size: 28, color: Color(0xFF0047AB)),
+                              onPressed: () => showEditDialog(doc),
                             ),
                             IconButton(
-                              icon: const Icon(
-                                  Icons.delete,
-                                  color: Color(0xFF0047AB)),
-                              onPressed: () =>
-                                  confirmDelete(id),
+                              icon: const Icon(Icons.delete, size: 28, color: Color(0xFF0047AB)),
+                              onPressed: () => confirmDelete(id),
                             ),
                           ],
                         ),

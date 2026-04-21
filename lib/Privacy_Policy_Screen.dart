@@ -35,7 +35,6 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
-      // ✅ FULL PAGE SCROLLABLE
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
           horizontal: w * 0.06,
@@ -124,9 +123,8 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
 
             SizedBox(height: h * 0.03),
 
-            // ✅ CHECKBOXES
             CheckboxListTile(
-              activeColor: const Color(0xFF0047AB), // box color when checked
+              activeColor: const Color(0xFF0047AB), 
               checkColor: Colors.white,
               contentPadding: EdgeInsets.zero,
               title: Text(
@@ -139,8 +137,8 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
             ),
 
             CheckboxListTile(
-              activeColor: const Color(0xFF0047AB), // box color when checked
-              checkColor: Colors.white,             // tick color
+              activeColor: const Color(0xFF0047AB), 
+              checkColor: Colors.white,             
               contentPadding: EdgeInsets.zero,
               title: Text(
                 "I agree to the Privacy Policy",
@@ -151,10 +149,8 @@ class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
               controlAffinity: ListTileControlAffinity.leading,
             ),
 
-
             SizedBox(height: h * 0.025),
 
-            // ✅ BUTTON
             SizedBox(
               width: double.infinity,
               height: h * 0.065,

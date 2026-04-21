@@ -23,7 +23,6 @@ class Admin_SetUp_Screen extends StatelessWidget {
       body: Column(
         children: [
 
-          /// 🔷 Header
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(
@@ -41,20 +40,20 @@ class Admin_SetUp_Screen extends StatelessWidget {
                 "Setup Your SmartAttend System",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 28, // slightly bigger for emphasis
-                  fontWeight: FontWeight.w800, // strong & professional
+                  fontSize: 28, 
+                  fontWeight: FontWeight.w800, 
                   color: const Color(0xFF0047AB),
-                  letterSpacing: 1.2, // subtle premium spacing
+                  letterSpacing: 1.2, 
                   shadows: const [
                     Shadow(
                       offset: Offset(1, 1),
                       blurRadius: 3,
-                      color: Colors.black26, // soft shadow for depth
+                      color: Colors.black26, 
                     ),
                     Shadow(
                       offset: Offset(0, 0),
                       blurRadius: 2,
-                      color: Colors.white24, // subtle glow
+                      color: Colors.white24, 
                     ),
                   ],
                 ),
@@ -62,7 +61,6 @@ class Admin_SetUp_Screen extends StatelessWidget {
             ),
           ),
 
-          /// 🔷 Grid
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(AppSize.width(context) * 0.05),
@@ -77,14 +75,14 @@ class Admin_SetUp_Screen extends StatelessWidget {
                     icon: Icons.school,
                     title: "College",
                     onAdd: () {
-                      // Open AddCollege dialog
+                      
                       showDialog(
                         context: context,
                         builder: (_) => const AddCollegeDialog(),
                       );
                     },
                     onView: () {
-                      // Navigate to ViewCollegeScreen
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -105,7 +103,7 @@ class Admin_SetUp_Screen extends StatelessWidget {
                       );
                     },
                     onView: () {
-                      // Navigate to ViewCollegeScreen
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -120,14 +118,14 @@ class Admin_SetUp_Screen extends StatelessWidget {
                     icon: Icons.class_,
                     title: "Class",
                     onAdd: () {
-                      // Open AddCollege dialog
+                      
                       showDialog(
                         context: context,
                         builder: (_) => const AddClassDialog(),
                       );
                     },
                     onView: () {
-                      // Navigate to ViewCollegeScreen
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -142,14 +140,14 @@ class Admin_SetUp_Screen extends StatelessWidget {
                     icon: Icons.group,
                     title: "Division",
                     onAdd: () {
-                      // Open AddCollege dialog
+                      
                       showDialog(
                         context: context,
                         builder: (_) => const AddDivisionDialog(),
                       );
                     },
                     onView: () {
-                      // Navigate to ViewCollegeScreen
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -158,20 +156,20 @@ class Admin_SetUp_Screen extends StatelessWidget {
                       );
                     },
                   ),
-                  // Inside your Grid children, add another buildSetupCard for Subject
+                  
                   buildSetupCard(
                     context,
-                    icon: Icons.menu_book, // icon for Subject
+                    icon: Icons.menu_book, 
                     title: "Subject",
                     onAdd: () {
-                      // Open AddSubject dialog
+                      
                       showDialog(
                         context: context,
                         builder: (_) => const AddSubjectDialog(),
                       );
                     },
                     onView: () {
-                      // Navigate to ViewSubjectScreen
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -241,7 +239,7 @@ class Admin_SetUp_Screen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 shape: BoxShape.circle,
               ),
               child: Icon(

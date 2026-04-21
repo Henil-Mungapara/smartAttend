@@ -43,8 +43,6 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
     fetchColleges();
   }
 
-  // ================= FETCH =================
-
   Future<void> fetchColleges() async {
     final snapshot = await _firestore.collection('colleges').get();
     setState(() {
@@ -105,14 +103,12 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
     });
   }
 
-  // ================= SAVE =================
-
   Future<void> saveStudent() async {
     if (!_formKey.currentState!.validate() ||
         selectedClassId == null ||
         selectedDivisionId == null ||
         selectedGender == null) {
-      UIHelper.showSnackBar(context, "Please complete all fields");
+      if (mounted) UIHelper.showSnackBar(context, "Please complete all fields");
       return;
     }
 
@@ -129,11 +125,10 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
 
       if (existing.docs.isNotEmpty) {
         setState(() => _isSaving = false);
-        UIHelper.showSnackBar(context, "Enrollment Number already exists");
+        if (mounted) UIHelper.showSnackBar(context, "Enrollment Number already exists");
         return;
       }
 
-      // 🔐 Create Firebase Authentication user
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(
             email: emailController.text.trim(),
@@ -142,7 +137,6 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
 
       String uid = userCredential.user!.uid;
 
-      // 🔥 Save student data in Firestore
       await _firestore.collection('users').doc(uid).set({
         'uid': uid,
         'fullName': nameController.text.trim(),
@@ -161,15 +155,13 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
 
       setState(() => _isSaving = false);
 
-      Navigator.pop(context);
-      UIHelper.showSnackBar(context, "Student Added Successfully");
+      if (mounted) Navigator.pop(context);
+      if (mounted) UIHelper.showSnackBar(context, "Student Added Successfully");
     } catch (e) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Error: $e");
+      if (mounted) UIHelper.showSnackBar(context, "Error: $e");
     }
   }
-
-  // ================= UI =================
 
   @override
   Widget build(BuildContext context) {
@@ -179,19 +171,16 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
     return Dialog(
       backgroundColor: const Color(0xFFF5F7FA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -209,7 +198,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? const CircularProgressIndicator(color: Color(0xFF0047AB))
@@ -225,7 +214,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: enrollmentController,
@@ -235,7 +224,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: rollController,
@@ -245,7 +234,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: emailController,
@@ -255,9 +244,8 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          // 🔐 Password Field
                           UIHelper.customTextField(
                             controller: passwordController,
                             hint: "Password",
@@ -267,7 +255,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                             ),
                             obscureText: true,
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: phoneController,
@@ -277,13 +265,13 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               color: Color(0xFF0047AB),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildGenderDropdown(),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildDatePicker(context),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildDropdown(
                             title: "Select College",
@@ -294,7 +282,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               if (val != null) fetchDepartments(val);
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildDropdown(
                             title: "Select Department",
@@ -305,7 +293,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               if (val != null) fetchClasses(val);
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildDropdown(
                             title: "Select Class",
@@ -316,7 +304,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                               if (val != null) fetchDivisions(val);
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           buildDropdown(
                             title: "Select Division",
@@ -329,7 +317,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                       ),
                     ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               if (!_isSaving)
                 Row(
@@ -359,7 +347,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
                         ),
                       ),
                     ),
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: 16),
                     Expanded(
                       child: SizedBox(
                         height: screenHeight * 0.065,

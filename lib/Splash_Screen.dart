@@ -34,12 +34,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     bool isFirstInstall = prefs.getBool('isFirstInstall') ?? true;
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    String? role = prefs.getString('role')?.toLowerCase();  // Normalize to lowercase
+    String? role = prefs.getString('role')?.toLowerCase();  
 
     if (!mounted) return;
 
     if (isFirstInstall) {
-      // First time user
+      
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const GetStartedPage()),
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     if (isLoggedIn && role != null) {
-      // Role-based navigation
+      
       if (role == "student") {
         Navigator.pushReplacement(
           context,
@@ -65,14 +65,14 @@ class _SplashScreenState extends State<SplashScreen>
           MaterialPageRoute(builder: (_) => const Admin_Main_Navigation_Screen()),
         );
       } else {
-        // Role missing or invalid
+        
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const LoginPage()),
         );
       }
     } else {
-      // Not logged in
+      
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginPage()),

@@ -53,7 +53,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
 
     if (!isUnique) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Class Code already exists");
+      if (mounted) UIHelper.showSnackBar(context, "Class Code already exists");
       return;
     }
 
@@ -64,8 +64,8 @@ class _AddClassDialogState extends State<AddClassDialog> {
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    Navigator.pop(context);
-    UIHelper.showSnackBar(context, "Class Added Successfully");
+    if (mounted) Navigator.pop(context);
+    if (mounted) UIHelper.showSnackBar(context, "Class Added Successfully");
   }
 
   @override
@@ -76,20 +76,17 @@ class _AddClassDialogState extends State<AddClassDialog> {
     return Dialog(
       backgroundColor: const Color(0xFFB6BFCA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// HEADER
+              
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -108,13 +105,11 @@ class _AddClassDialogState extends State<AddClassDialog> {
                 ),
               ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.05,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: const CircularProgressIndicator(
                         color: Color(0xFF0047AB),
                       ),
@@ -123,7 +118,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          /// Class Name
+                          
                           UIHelper.customTextField(
                             controller: classNameController,
                             hint: "Class Name",
@@ -133,9 +128,8 @@ class _AddClassDialogState extends State<AddClassDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Class Code
                           UIHelper.customTextField(
                             controller: classCodeController,
                             hint: "Class Code",
@@ -145,9 +139,8 @@ class _AddClassDialogState extends State<AddClassDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Department Dropdown
                           DropdownButtonFormField<String>(
                             value: selectedDepartmentId,
                             decoration: InputDecoration(
@@ -177,12 +170,12 @@ class _AddClassDialogState extends State<AddClassDialog> {
                       ),
                     ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               if (!_isSaving)
                 Row(
                   children: [
-                    /// Cancel Button
+                    
                     Expanded(
                       child: SizedBox(
                         height: screenHeight * 0.065,
@@ -206,9 +199,8 @@ class _AddClassDialogState extends State<AddClassDialog> {
                       ),
                     ),
 
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: 16),
 
-                    /// Save Button
                     Expanded(
                       child: SizedBox(
                         height: screenHeight * 0.065,

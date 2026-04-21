@@ -4,7 +4,6 @@ import '../app_size/app_size.dart';
 class ViewAttendanceScreen extends StatelessWidget {
   const ViewAttendanceScreen({super.key});
 
-  // Static student attendance data
   static const List<Map<String, dynamic>> _students = [
     {"name": "Rahul Sharma", "roll": "CS-01", "status": "Present"},
     {"name": "Priya Patel", "roll": "CS-02", "status": "Present"},
@@ -23,7 +22,6 @@ class ViewAttendanceScreen extends StatelessWidget {
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
 
-    // Count present/absent
     int presentCount = _students.where((s) => s["status"] == "Present").length;
     int absentCount = _students.length - presentCount;
 
@@ -41,7 +39,6 @@ class ViewAttendanceScreen extends StatelessWidget {
         child: Column(
           children: [
 
-            // ── Subject & Date Info ──
             Container(
               width: double.infinity,
               margin: EdgeInsets.all(w * 0.05),
@@ -74,7 +71,6 @@ class ViewAttendanceScreen extends StatelessWidget {
                   ),
                   SizedBox(height: h * 0.015),
 
-                  // Stats row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -89,7 +85,6 @@ class ViewAttendanceScreen extends StatelessWidget {
               ),
             ),
 
-            // ── Section Header ──
             Padding(
               padding: EdgeInsets.symmetric(horizontal: w * 0.06),
               child: Row(
@@ -109,7 +104,6 @@ class ViewAttendanceScreen extends StatelessWidget {
 
             SizedBox(height: h * 0.01),
 
-            // ── Student List ──
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.05),
@@ -134,7 +128,7 @@ class ViewAttendanceScreen extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        // Avatar
+                        
                         CircleAvatar(
                           radius: w * 0.05,
                           backgroundColor: const Color(0xFF0047AB).withAlpha(20),
@@ -149,7 +143,6 @@ class ViewAttendanceScreen extends StatelessWidget {
                         ),
                         SizedBox(width: w * 0.035),
 
-                        // Name & Roll
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +160,6 @@ class ViewAttendanceScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // Status badge
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: 5),
                           decoration: BoxDecoration(
@@ -206,7 +198,6 @@ class ViewAttendanceScreen extends StatelessWidget {
     );
   }
 
-  // ── Mini Stat inside blue card ──
   Widget _miniStat(String label, String value, Color valueColor, double w) {
     return Column(
       children: [

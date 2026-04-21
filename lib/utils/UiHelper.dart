@@ -4,36 +4,37 @@ import 'package:lottie/lottie.dart';
 
 class UIHelper {
 
-  // ================= TEXT FIELD =================
   static Widget customTextField({
     required TextEditingController controller,
     required String hint,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
     Widget? suffixIcon,
-    Widget? prefixIcon,// 👈 Added prefixIcon (default null)
+    Widget? prefixIcon,
     Iterable<String>? autofillHints,
+    TextAlign textAlign = TextAlign.start,
   }) {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      textAlign: textAlign,
       keyboardType: keyboardType,
       autofillHints: autofillHints,
       style: const TextStyle(
-        color: Colors.black,   // 👈 Text color inside field
+        color: Colors.black,   
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,  // 👈 White background
+        fillColor: Colors.white,  
 
         hintText: hint,
         hintStyle: const TextStyle(
           color: Colors.black,
         ),
 
-        prefixIcon: prefixIcon,   // 👈 Optional prefix
-        suffixIcon: suffixIcon,   // 👈 Optional suffix
+        prefixIcon: prefixIcon,   
+        suffixIcon: suffixIcon,   
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -51,7 +52,6 @@ class UIHelper {
     );
   }
 
-  // ================= ELEVATED BUTTON =================
   static Widget customButton({
     required String text,
     required VoidCallback onPressed,
@@ -63,8 +63,8 @@ class UIHelper {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF0047AB),
-          elevation: 5, // 👈 Minor shadow (try 3–6)
-          shadowColor: Color(0xFF000080), // 👈 Soft shadow color
+          elevation: 5, 
+          shadowColor: Color(0xFF000080), 
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
@@ -81,8 +81,38 @@ class UIHelper {
     );
   }
 
+  static Widget rowOfButtons({
+    required String text1,
+    required VoidCallback onPressed1,
+    required String text2,
+    required VoidCallback onPressed2,
+    bool isLoading = false,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: 50,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Color(0xFF0047AB)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+              onPressed: isLoading ? null : onPressed1,
+              child: Text(text1, style: const TextStyle(color: Color(0xFF0047AB), fontSize: 16)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: isLoading 
+            ? const Center(child: CircularProgressIndicator(color: Color(0xFF0047AB)))
+            : customButton(text: text2, onPressed: onPressed2),
+        ),
+      ],
+    );
+  }
 
-  // ================= TEXT BUTTON =================
   static Widget customTextButton({
     required String text,
     required VoidCallback onTap,
@@ -99,14 +129,12 @@ class UIHelper {
     );
   }
 
-  // ================= SNACKBAR =================
   static void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
   }
 
-  // ================= ALERT DIALOG =================
   static void showAlert(
       BuildContext context,
       String title,
@@ -127,7 +155,6 @@ class UIHelper {
     );
   }
 
-// ================= PROFESSIONAL EXIT ALERT =================
   static void showExitAlert(BuildContext context) {
     showDialog(
       context: context,
@@ -144,7 +171,6 @@ class UIHelper {
                 mainAxisSize: MainAxisSize.min,
                 children: [
 
-                  // 🔵 Animation
                   SizedBox(
                     height: 70,
                     width: 70,
@@ -177,7 +203,6 @@ class UIHelper {
 
                   const SizedBox(height: 20),
 
-                  // 🔘 Buttons Row
                   Row(
                     children: [
                       Expanded(
@@ -248,7 +273,6 @@ class UIHelper {
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              /// 🔵 Top Animation
               SizedBox(
                 height: 70,
                 width: 70,
@@ -260,7 +284,6 @@ class UIHelper {
 
               const SizedBox(height: 15),
 
-              /// 🔹 Title
               Text(
                 title,
                 style: const TextStyle(
@@ -271,7 +294,6 @@ class UIHelper {
 
               const SizedBox(height: 8),
 
-              /// 🔹 Message
               Text(
                 message,
                 textAlign: TextAlign.center,
@@ -283,11 +305,9 @@ class UIHelper {
 
               const SizedBox(height: 20),
 
-              /// 🔘 Buttons
               Row(
                 children: [
 
-                  /// View Button (Outlined)
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
@@ -314,7 +334,6 @@ class UIHelper {
 
                   const SizedBox(width: 12),
 
-                  /// Add Button (Primary Blue)
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -339,7 +358,6 @@ class UIHelper {
 
               const SizedBox(height: 10),
 
-              /// Cancel Text
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(

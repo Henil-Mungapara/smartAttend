@@ -34,7 +34,6 @@ class FacultyDashboardScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.025),
 
-              // ── Welcome Section ──
               Center(
                 child: Column(
                   children: [
@@ -59,7 +58,6 @@ class FacultyDashboardScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.025),
 
-              // ── Stats Row ──
               Row(
                 children: [
                   _statCard(Icons.people_rounded, "Total Students", "120", w, h),
@@ -72,7 +70,6 @@ class FacultyDashboardScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.03),
 
-              // ── Quick Actions ──
               Text(
                 "Quick Actions",
                 style: TextStyle(
@@ -103,7 +100,6 @@ class FacultyDashboardScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.03),
 
-              // ── Today's Schedule ──
               Text(
                 "Today's Schedule",
                 style: TextStyle(
@@ -120,7 +116,6 @@ class FacultyDashboardScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.03),
 
-              // ── Recent Activity ──
               Text(
                 "Recent Activity",
                 style: TextStyle(
@@ -143,7 +138,6 @@ class FacultyDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ── Stat Card ──
   Widget _statCard(IconData icon, String label, String value, double w, double h) {
     return Expanded(
       child: Container(
@@ -183,7 +177,6 @@ class FacultyDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ── Action Card ──
   Widget _actionCard({
     required IconData icon,
     required String title,
@@ -232,7 +225,6 @@ class FacultyDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ── Schedule Card ──
   Widget _scheduleCard(String subject, String time, String room, String sem, double w, double h) {
     return Container(
       margin: EdgeInsets.only(bottom: h * 0.012),
@@ -289,7 +281,6 @@ class FacultyDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ── Activity Item ──
   Widget _activityItem(String title, String time, IconData icon, Color color, double w, double h) {
     return Container(
       margin: EdgeInsets.only(bottom: h * 0.01),

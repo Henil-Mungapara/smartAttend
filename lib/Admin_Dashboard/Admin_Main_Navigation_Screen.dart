@@ -24,7 +24,7 @@ class _Admin_Main_Navigation_ScreenState
     "Manage Faculty",
     "Manage Students",
     "Attendance Reports",
-    "Setup", // ✅ Changed from Settings
+    "Setup", 
   ];
 
   final List<Widget> _pages = const [
@@ -32,7 +32,7 @@ class _Admin_Main_Navigation_ScreenState
     Admin_ManageFaculty_Screen(),
     Admin_ManageStudents_Screen(),
     Admin_AttendanceReport_Screen(),
-    Admin_SetUp_Screen(), // you can rename file later if needed
+    Admin_SetUp_Screen(), 
   ];
 
   @override
@@ -50,7 +50,7 @@ class _Admin_Main_Navigation_ScreenState
       },
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // disables back arrow
+          automaticallyImplyLeading: false, 
           title: Text(
             _titles[_currentIndex],
             style: const TextStyle(color: Colors.white),
@@ -104,7 +104,7 @@ class _Admin_Main_Navigation_ScreenState
               label: "Reports",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings_suggest), // ✅ Better icon for Setup
+              icon: Icon(Icons.settings_suggest), 
               label: "Setup",
             ),
           ],

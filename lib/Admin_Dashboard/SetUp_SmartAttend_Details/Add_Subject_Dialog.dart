@@ -81,7 +81,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
 
     if (!isUnique) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Subject code already exists");
+      if (mounted) UIHelper.showSnackBar(context, "Subject code already exists");
       return;
     }
 
@@ -92,11 +92,11 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      Navigator.pop(context);
-      UIHelper.showSnackBar(context, "Subject created successfully");
+      if (mounted) Navigator.pop(context);
+      if (mounted) UIHelper.showSnackBar(context, "Subject created successfully");
     } catch (e) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Error saving subject: $e");
+      if (mounted) UIHelper.showSnackBar(context, "Error saving subject: $e");
     }
   }
 
@@ -108,20 +108,17 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
     return Dialog(
       backgroundColor: const Color(0xFFB6BFCA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.05,
-        vertical: screenHeight * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(screenWidth * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Header
+              
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
@@ -140,13 +137,11 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                 ),
               ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.05,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: const Center(
                         child: CircularProgressIndicator(
                           color: Color(0xFF0047AB),
@@ -157,7 +152,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          /// Subject Name
+                          
                           UIHelper.customTextField(
                             controller: nameController,
                             hint: "Subject Name",
@@ -167,9 +162,8 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Subject Code
                           UIHelper.customTextField(
                             controller: codeController,
                             hint: "Subject Code",
@@ -179,7 +173,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                             ),
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
                           DropdownButtonFormField<String>(
                             value: selectedDepartmentId,
@@ -219,9 +213,8 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                             val == null || val.isEmpty ? "Select a department" : null,
                           ),
 
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 16),
 
-                          /// Class Dropdown
                           DropdownButtonFormField<String>(
                             value: selectedClassId,
                             decoration: InputDecoration(
@@ -260,12 +253,12 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                       ),
                     ),
 
-              SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: 24),
 
               if (!_isSaving)
                 Row(
                   children: [
-                    /// Cancel Button
+                    
                     Expanded(
                       child: SizedBox(
                         height: AppSize.height(context) * 0.065,
@@ -288,11 +281,11 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                       ),
                     ),
 
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: 16),
 
                     Expanded(
                       child: SizedBox(
-                        height: AppSize.height(context) * 0.065, // SAME HEIGHT
+                        height: AppSize.height(context) * 0.065, 
                         child: UIHelper.customButton(
                           text: "Save",
                           onPressed: saveSubject,

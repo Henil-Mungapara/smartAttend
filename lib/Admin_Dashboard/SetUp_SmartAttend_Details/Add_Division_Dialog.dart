@@ -53,7 +53,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
 
     if (!isUnique) {
       setState(() => _isSaving = false);
-      UIHelper.showSnackBar(context, "Division Code already exists");
+      if (mounted) UIHelper.showSnackBar(context, "Division Code already exists");
       return;
     }
 
@@ -64,36 +64,31 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    Navigator.pop(context);
-    UIHelper.showSnackBar(context, "Division Added Successfully");
+    if (mounted) Navigator.pop(context);
+    if (mounted) UIHelper.showSnackBar(context, "Division Added Successfully");
   }
 
   @override
   Widget build(BuildContext context) {
     double w = AppSize.width(context);
-    double h = AppSize.height(context);
-
     return Dialog(
       backgroundColor: const Color(0xFFB6BFCA),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(w * 0.06),
+        borderRadius: BorderRadius.circular(24),
       ),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: w * 0.05,
-        vertical: h * 0.05,
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(w * 0.06),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              /// Header
+              
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: h * 0.02),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(w * 0.05),
+                  borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
                     colors: [Color(0xFF0047AB), Color(0xFF1565C0)],
                   ),
@@ -110,11 +105,11 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                 ),
               ),
 
-              SizedBox(height: h * 0.03),
+              SizedBox(height: 24),
 
               _isSaving
                   ? Padding(
-                      padding: EdgeInsets.symmetric(vertical: h * 0.05),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: const CircularProgressIndicator(
                         color: Color(0xFF0047AB),
                       ),
@@ -132,7 +127,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                             ),
                           ),
 
-                          SizedBox(height: h * 0.02),
+                          SizedBox(height: 16),
 
                           UIHelper.customTextField(
                             controller: divisionCodeController,
@@ -143,7 +138,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                             ),
                           ),
 
-                          SizedBox(height: h * 0.02),
+                          SizedBox(height: 16),
 
                           DropdownButtonFormField<String>(
                             value: selectedClassId,
@@ -166,7 +161,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(w * 0.04),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ),
@@ -174,7 +169,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                       ),
                     ),
 
-              SizedBox(height: h * 0.04),
+              SizedBox(height: 32),
 
               if (!_isSaving)
                 Row(
@@ -201,11 +196,11 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                       ),
                     ),
 
-                    SizedBox(width: w * 0.04),
+                    SizedBox(width: 16),
 
                     Expanded(
                       child: SizedBox(
-                        height: AppSize.height(context) * 0.065, // SAME HEIGHT
+                        height: AppSize.height(context) * 0.065, 
                         child: UIHelper.customButton(
                           text: "Save",
                           onPressed: _saveDivision,

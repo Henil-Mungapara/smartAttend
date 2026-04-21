@@ -26,6 +26,63 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
     });
   }
 
+  Future<void> _deleteClass(String id) async {
+    await _firestore.collection('classes').doc(id).delete();
+    if(mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Class Deleted Successfully")));
+    }
+  }
+
+  void _confirmDelete(String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Class"),
+        content: const Text("Are you sure you want to delete this class?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteClass(id);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
+  void _showEditDialog(DocumentSnapshot doc) {
+    final nameController = TextEditingController(text: doc['name']);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Edit Class"),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(labelText: "Class Name"),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0047AB)),
+            onPressed: () async {
+              await _firestore.collection('classes').doc(doc.id).update({
+                'name': nameController.text.trim(),
+              });
+              if(mounted) Navigator.pop(context);
+              if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Class Updated Successfully")));
+            },
+            child: const Text("Update", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,29 +116,30 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
       ),
       body: Column(
         children: [
-          /// 🔹 SEARCH BAR
+          
           Padding(
             padding: EdgeInsets.all(width * 0.04),
-            child: UIHelper.customTextField(
-              controller: _searchController,
-              hint: "Search by Class Name or Code",
-              prefixIcon: const Icon(Icons.search, color: Color(0xFF0047AB)),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: "Search by Class Name or Code",
+                  prefixIcon: Icon(Icons.search, color: Color(0xFF0047AB)),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value.toLowerCase();
+                  });
+                },
+              ),
             ),
           ),
 
-          /// Listen to text changes
-          Builder(
-            builder: (context) {
-              _searchController.addListener(() {
-                setState(() {
-                  _searchQuery = _searchController.text.toLowerCase();
-                });
-              });
-              return const SizedBox();
-            },
-          ),
-
-          /// 🔹 CLASS LIST
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore
@@ -133,84 +191,47 @@ class _ViewClassScreenState extends State<ViewClassScreen> {
                       margin: EdgeInsets.symmetric(vertical: height * 0.008),
                       elevation: 4,
                       color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.04,
-                          vertical: height * 0.015,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: width * 0.04, vertical: height * 0.015),
+                        leading: CircleAvatar(
+                          radius: width * 0.06,
+                          backgroundColor: const Color(0xFF0047AB),
+                          child: Text(
+                            code.substring(0, 1).toUpperCase(),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: width * 0.05),
+                          ),
                         ),
-                        child: Row(
+                        title: Text(
+                          name,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.04),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              radius: width * 0.06,
-                              backgroundColor: const Color(0xFF0047AB),
-                              child: Text(
-                                code.substring(0, 1).toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: width * 0.05,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: width * 0.04),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: width * 0.045,
-                                    ),
-                                  ),
-                                  SizedBox(height: height * 0.005),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.business,
-                                        size: 16,
-                                        color: Colors.grey,
-                                      ),
-                                      SizedBox(width: width * 0.01),
-                                      Expanded(
-                                        child: Text(
-                                          departmentName,
-                                          style: TextStyle(
-                                            fontSize: width * 0.035,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height * 0.004),
-                                  Text(
-                                    "Code: $code",
-                                    style: TextStyle(
-                                      fontSize: width * 0.032,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
+                            SizedBox(height: height * 0.005),
                             Row(
-                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  Icons.edit,
-                                  color: const Color(0xFF0047AB),
-                                  size: width * 0.07,
-                                ),
-                                SizedBox(width: width * 0.03),
-                                Icon(
-                                  Icons.delete,
-                                  color: const Color(0xFF0047AB),
-                                  size: width * 0.07,
+                                const Icon(Icons.business, size: 16, color: Colors.grey),
+                                SizedBox(width: width * 0.01),
+                                Expanded(
+                                  child: Text(departmentName, style: TextStyle(fontSize: width * 0.035)),
                                 ),
                               ],
+                            ),
+                            SizedBox(height: height * 0.004),
+                            Text("Code: $code", style: TextStyle(fontSize: width * 0.032, color: Colors.black54)),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _showEditDialog(doc),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _confirmDelete(code),
                             ),
                           ],
                         ),

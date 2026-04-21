@@ -4,7 +4,6 @@ import '../app_size/app_size.dart';
 class Admin_AttendanceReport_Screen extends StatelessWidget {
   const Admin_AttendanceReport_Screen({super.key});
 
-  // Static report data
   static const List<Map<String, dynamic>> _reportData = [
     {"dept": "Software Engineering", "total": 60, "present": 55, "absent": 5},
     {"dept": "Computer Science", "total": 55, "present": 48, "absent": 7},
@@ -18,8 +17,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
-
-    // Calculate totals
     int totalStudents = 0, totalPresent = 0, totalAbsent = 0;
     for (var d in _reportData) {
       totalStudents += d["total"] as int;
@@ -34,7 +31,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
         child: Column(
           children: [
 
-            // ── Summary Card ──
             Container(
               width: double.infinity,
               margin: EdgeInsets.fromLTRB(w * 0.04, w * 0.03, w * 0.04, 0),
@@ -67,7 +63,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
                   ),
                   SizedBox(height: h * 0.012),
 
-                  // Stats row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -86,7 +81,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
 
             SizedBox(height: h * 0.01),
 
-            // ── Filter Chips ──
             Padding(
               padding: EdgeInsets.symmetric(horizontal: w * 0.04),
               child: Row(
@@ -102,7 +96,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
 
             SizedBox(height: h * 0.01),
 
-            // ── Section Header ──
             Padding(
               padding: EdgeInsets.symmetric(horizontal: w * 0.05),
               child: Row(
@@ -122,7 +115,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
 
             SizedBox(height: h * 0.006),
 
-            // ── Department Report List ──
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.04),
@@ -151,7 +143,7 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Department name + percentage
+                        
                         Row(
                           children: [
                             Container(
@@ -191,7 +183,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
 
                         SizedBox(height: h * 0.008),
 
-                        // Progress bar
                         ClipRRect(
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
@@ -204,7 +195,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
 
                         SizedBox(height: h * 0.006),
 
-                        // Mini stats row
                         Row(
                           children: [
                             _miniLabel(Icons.people_rounded, "Total: $total", Colors.black54, w),
@@ -226,7 +216,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
     );
   }
 
-  // ── Summary stat (inside blue card) ──
   Widget _summaryItem(String label, String value, Color valueColor, double w) {
     return Column(
       children: [
@@ -237,7 +226,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
     );
   }
 
-  // ── Filter Chip ──
   Widget _filterChip(String label, bool isSelected, double w) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: w * 0.03, vertical: 6),
@@ -259,7 +247,6 @@ class Admin_AttendanceReport_Screen extends StatelessWidget {
     );
   }
 
-  // ── Mini label with icon ──
   Widget _miniLabel(IconData icon, String text, Color color, double w) {
     return Row(
       children: [

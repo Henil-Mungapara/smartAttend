@@ -13,6 +13,63 @@ class _ViewSubjectScreenState extends State<ViewSubjectScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String _searchQuery = "";
 
+  Future<void> _deleteSubject(String id) async {
+    await _firestore.collection('subjects').doc(id).delete();
+    if(mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Subject Deleted Successfully")));
+    }
+  }
+
+  void _confirmDelete(String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Subject"),
+        content: const Text("Are you sure you want to delete this subject?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              Navigator.pop(context);
+              _deleteSubject(id);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
+  void _showEditDialog(DocumentSnapshot doc) {
+    final nameController = TextEditingController(text: doc['name']);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Edit Subject"),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(labelText: "Subject Name"),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0047AB)),
+            onPressed: () async {
+              await _firestore.collection('subjects').doc(doc.id).update({
+                'name': nameController.text.trim(),
+              });
+              if(mounted) Navigator.pop(context);
+              if(mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Subject Updated Successfully")));
+            },
+            child: const Text("Update", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +79,7 @@ class _ViewSubjectScreenState extends State<ViewSubjectScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Goes back to previous screen
+            if (mounted) Navigator.pop(context); 
           },
         ),
         title: const Text(
@@ -33,34 +90,27 @@ class _ViewSubjectScreenState extends State<ViewSubjectScreen> {
       ),
       body: Column(
         children: [
-          // 🔹 Search Bar
+          
           Padding(
             padding: EdgeInsets.all(AppSize.width(context) * 0.04),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search by Subject Name or Code",
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF0047AB)),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Color(0xFF0047AB)),
-                ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
               ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value.toLowerCase();
-                });
-              },
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: "Search by Subject Name or Code",
+                  prefixIcon: Icon(Icons.search, color: Color(0xFF0047AB)),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                ),
+                onChanged: (val) =>
+                  setState(() => _searchQuery = val.toLowerCase()),
+              ),
             ),
           ),
 
-          // 🔹 Subject List
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore.collection('subjects').orderBy('createdAt', descending: true).snapshots(),
@@ -133,14 +183,13 @@ class _ViewSubjectScreenState extends State<ViewSubjectScreen> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            InkWell(
-                              onTap: () {}, // TODO: update logic
-                              child: const Icon(Icons.edit, color: Color(0xFF0047AB), size: 30),
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _showEditDialog(doc),
                             ),
-                            const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () {}, // TODO: delete logic
-                              child: const Icon(Icons.delete, color: Color(0xFF0047AB), size: 30),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Color(0xFF0047AB), size: 28),
+                              onPressed: () => _confirmDelete(code),
                             ),
                           ],
                         ),
