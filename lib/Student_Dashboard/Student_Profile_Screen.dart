@@ -18,6 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? _userData;
   bool _isLoading = true;
   String _divisionName = "N/A";
+  String _className = "N/A";
+  String _departmentName = "N/A";
+  String _collegeName = "N/A";
 
   @override
   void initState() {
@@ -37,6 +40,34 @@ class _ProfilePageState extends State<ProfilePage> {
             final divDoc = await _firestore.collection('divisions').doc(divId).get();
             if (divDoc.exists) {
               _divisionName = divDoc.data()?['name'] ?? "N/A";
+            }
+          } catch (e) {
+            // keep N/A
+          }
+        }
+        
+        String? clsId = data['classId'];
+        if (clsId != null && clsId.isNotEmpty) {
+          try {
+            final clsDoc = await _firestore.collection('classes').doc(clsId).get();
+            if (clsDoc.exists) {
+              _className = clsDoc.data()?['name'] ?? "N/A";
+              
+              String? deptId = clsDoc.data()?['departmentId'];
+              if (deptId != null && deptId.isNotEmpty) {
+                final deptDoc = await _firestore.collection('departments').doc(deptId).get();
+                if (deptDoc.exists) {
+                  _departmentName = deptDoc.data()?['name'] ?? "N/A";
+
+                  String? colId = deptDoc.data()?['collegeId'];
+                  if (colId != null && colId.isNotEmpty) {
+                     final colDoc = await _firestore.collection('colleges').doc(colId).get();
+                     if (colDoc.exists) {
+                       _collegeName = colDoc.data()?['name'] ?? "N/A";
+                     }
+                  }
+                }
+              }
             }
           } catch (e) {
             // keep N/A
@@ -68,8 +99,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showEditProfileModal() {
-    final nameCtrl = TextEditingController(text: _userData?['name'] ?? "");
-    final mobileCtrl = TextEditingController(text: _userData?['mobile'] ?? "");
+    final nameCtrl = TextEditingController(text: _userData?['fullName'] ?? _userData?['name'] ?? "");
+    final mobileCtrl = TextEditingController(text: _userData?['phone'] ?? _userData?['mobile'] ?? "");
     
     bool isSaving = false;
 
@@ -104,7 +135,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           final uid = FirebaseAuth.instance.currentUser?.uid;
                           if (uid != null) {
                             await _firestore.collection('users').doc(uid).update({
+                              'fullName': nameCtrl.text.trim(),
                               'name': nameCtrl.text.trim(),
+                              'phone': mobileCtrl.text.trim(),
                               'mobile': mobileCtrl.text.trim(),
                             });
                             await _fetchProfileData();
@@ -139,13 +172,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
 
-    final name = _userData?['name'] ?? "Unknown";
+    final name = _userData?['fullName'] ?? _userData?['name'] ?? "Unknown";
     final email = _userData?['email'] ?? "N/A";
-    final mobile = _userData?['mobile'] ?? "N/A";
+    final mobile = _userData?['phone'] ?? _userData?['mobile'] ?? "N/A";
     final role = _userData?['role'] ?? "Student";
-    final department = _userData?['department'] ?? "N/A";
-    final enrollmentYear = _userData?['enrollmentYear'] ?? "N/A";
-    final rollNo = _userData?['rollNo'] ?? "N/A";
+    final enrollmentNo = _userData?['enrollmentNumber'] ?? _userData?['enrollmentNo'] ?? "N/A";
+    final rollNo = _userData?['rollNumber'] ?? _userData?['rollNo'] ?? "N/A";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
@@ -233,10 +265,12 @@ class _ProfilePageState extends State<ProfilePage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.06),
                 child: _buildCard("Academic Information", Icons.school_outlined, w, h, [
-                  _infoTile(Icons.apartment_rounded, "Department", department, w), _thinDivider(),
-                  _infoTile(Icons.calendar_today_rounded, "Enrollment Year", enrollmentYear.toString(), w), _thinDivider(),
-                  _infoTile(Icons.class_rounded, "Division", _divisionName, w), _thinDivider(),
-                  _infoTile(Icons.numbers_rounded, "Roll Number", rollNo, w),
+                  _infoTile(Icons.account_balance, "College", _collegeName, w), _thinDivider(),
+                  _infoTile(Icons.domain, "Department", _departmentName, w), _thinDivider(),
+                  _infoTile(Icons.class_, "Class", _className, w), _thinDivider(),
+                  _infoTile(Icons.group, "Division", _divisionName, w), _thinDivider(),
+                  _infoTile(Icons.badge, "Enrollment Number", enrollmentNo, w), _thinDivider(),
+                  _infoTile(Icons.format_list_numbered, "Roll Number", rollNo, w),
                 ]),
               ),
               SizedBox(height: h * 0.018),

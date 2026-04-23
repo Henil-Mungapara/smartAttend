@@ -17,6 +17,8 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, dynamic>? _userData;
   bool _isLoading = true;
+  List<String> _assignedClasses = [];
+  List<String> _assignedSubjects = [];
 
   @override
   void initState() {
@@ -33,6 +35,22 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
           _userData = doc.data();
           _isLoading = false;
         });
+        
+        try {
+          List<dynamic> classIds = doc.data()?['classIds'] ?? [];
+          if (classIds.isNotEmpty) {
+            final clsDocs = await _firestore.collection('classes').where(FieldPath.documentId, whereIn: classIds).get();
+            if (mounted) setState(() => _assignedClasses = clsDocs.docs.map((e) => e['name'].toString()).toList());
+          }
+          
+          List<dynamic> subjectIds = doc.data()?['subjectIds'] ?? [];
+          if (subjectIds.isNotEmpty) {
+            final subDocs = await _firestore.collection('subjects').where(FieldPath.documentId, whereIn: subjectIds).get();
+            if (mounted) setState(() => _assignedSubjects = subDocs.docs.map((e) => e['name'].toString()).toList());
+          }
+        } catch (e) {
+          debugPrint("Error fetching classes/subjects: $e");
+        }
       } else {
         setState(() => _isLoading = false);
       }
@@ -55,10 +73,8 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
   }
 
   void _showEditProfileModal() {
-    final nameCtrl = TextEditingController(text: _userData?['name'] ?? "");
-    final mobileCtrl = TextEditingController(text: _userData?['mobile'] ?? "");
-    final departmentCtrl = TextEditingController(text: _userData?['department'] ?? "");
-    final designationCtrl = TextEditingController(text: _userData?['designation'] ?? "");
+    final nameCtrl = TextEditingController(text: _userData?['fullName'] ?? _userData?['name'] ?? "");
+    final mobileCtrl = TextEditingController(text: _userData?['phone'] ?? _userData?['mobile'] ?? "");
     
     bool isSaving = false;
 
@@ -83,10 +99,6 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
                     UIHelper.customTextField(controller: nameCtrl, hint: "Name", prefixIcon: const Icon(Icons.person), textAlign: TextAlign.center),
                     const SizedBox(height: 15),
                     UIHelper.customTextField(controller: mobileCtrl, hint: "Mobile", keyboardType: TextInputType.phone, prefixIcon: const Icon(Icons.phone), textAlign: TextAlign.center),
-                    const SizedBox(height: 15),
-                    UIHelper.customTextField(controller: departmentCtrl, hint: "Department", prefixIcon: const Icon(Icons.apartment), textAlign: TextAlign.center),
-                    const SizedBox(height: 15),
-                    UIHelper.customTextField(controller: designationCtrl, hint: "Designation", prefixIcon: const Icon(Icons.work), textAlign: TextAlign.center),
                     const SizedBox(height: 25),
                     
                     isSaving ? const CircularProgressIndicator() : UIHelper.customButton(
@@ -97,10 +109,10 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
                           final uid = FirebaseAuth.instance.currentUser?.uid;
                           if (uid != null) {
                             await _firestore.collection('users').doc(uid).update({
+                              'fullName': nameCtrl.text.trim(),
                               'name': nameCtrl.text.trim(),
+                              'phone': mobileCtrl.text.trim(),
                               'mobile': mobileCtrl.text.trim(),
-                              'department': departmentCtrl.text.trim(),
-                              'designation': designationCtrl.text.trim(),
                             });
                             await _fetchProfileData();
                             if(!ctx.mounted) return;
@@ -134,14 +146,11 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
 
-    final name = _userData?['name'] ?? "Unknown";
+    final name = _userData?['fullName'] ?? _userData?['name'] ?? "Unknown";
     final email = _userData?['email'] ?? "N/A";
-    final mobile = _userData?['mobile'] ?? "N/A";
+    final mobile = _userData?['phone'] ?? _userData?['mobile'] ?? "N/A";
     final role = _userData?['role'] ?? "Faculty";
-    final department = _userData?['department'] ?? "N/A";
-    final designation = _userData?['designation'] ?? "N/A";
-    final facultyId = _userData?['facultyId'] ?? "N/A";
-    final joiningYear = _userData?['joiningYear'] ?? "N/A";
+    final facultyId = _userData?['facultyCode'] ?? _userData?['facultyId'] ?? "N/A";
 
     return Scaffold(
       appBar: AppBar(
@@ -201,10 +210,9 @@ class _FacultyProfileScreenState extends State<FacultyProfileScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: w * 0.06),
                 child: _buildCard("Academic Information", [
-                  _infoTile(Icons.apartment, "Department", department), _divider(),
-                  _infoTile(Icons.work, "Designation", designation), _divider(),
-                  _infoTile(Icons.badge, "Faculty ID", facultyId), _divider(),
-                  _infoTile(Icons.calendar_today, "Joining Year", joiningYear.toString()),
+                  _infoTile(Icons.badge, "Faculty Code", facultyId), _divider(),
+                  _infoTile(Icons.class_, "Assigned Classes", _assignedClasses.isEmpty ? "None" : _assignedClasses.join(", ")), _divider(),
+                  _infoTile(Icons.book, "Assigned Subjects", _assignedSubjects.isEmpty ? "None" : _assignedSubjects.join(", ")),
                 ]),
               ),
 

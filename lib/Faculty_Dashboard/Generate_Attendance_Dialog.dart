@@ -202,6 +202,16 @@ class _GenerateAttendanceDialogState extends State<GenerateAttendanceDialog> {
       return;
     }
 
+    if (_labController.text.trim().isEmpty || 
+        _dateController.text.trim().isEmpty || 
+        _startTimeController.text.trim().isEmpty || 
+        _endTimeController.text.trim().isEmpty ||
+        _qrDurationController.text.trim().isEmpty ||
+        _geolocatorRangeController.text.trim().isEmpty) {
+      UIHelper.showSnackBar(context, "All configuration fields are strictly required.");
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
@@ -333,7 +343,7 @@ class _GenerateAttendanceDialogState extends State<GenerateAttendanceDialog> {
 
               UIHelper.customTextField(
                 controller: _labController,
-                hint: "Lab / Room Name (Optional)",
+                hint: "Lab / Room Name",
                 prefixIcon: const Icon(Icons.meeting_room, color: Color(0xFF0047AB)),
               ),
               const SizedBox(height: 16),

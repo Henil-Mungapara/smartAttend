@@ -54,8 +54,8 @@ class _AdminProfileScreenState extends State<Admin_Profile_Screen> {
   }
 
   void _showEditProfileModal() {
-    final nameCtrl = TextEditingController(text: _userData?['name'] ?? "");
-    final mobileCtrl = TextEditingController(text: _userData?['mobile'] ?? "");
+    final nameCtrl = TextEditingController(text: _userData?['fullName'] ?? _userData?['name'] ?? "");
+    final mobileCtrl = TextEditingController(text: _userData?['phone'] ?? _userData?['mobile'] ?? "");
     
     bool isSaving = false;
 
@@ -118,7 +118,9 @@ class _AdminProfileScreenState extends State<Admin_Profile_Screen> {
                                       final uid = FirebaseAuth.instance.currentUser?.uid;
                                       if (uid != null) {
                                         await _firestore.collection('users').doc(uid).update({
+                                          'fullName': nameCtrl.text.trim(),
                                           'name': nameCtrl.text.trim(),
+                                          'phone': mobileCtrl.text.trim(),
                                           'mobile': mobileCtrl.text.trim(),
                                         });
                                         await _fetchProfileData();
@@ -163,9 +165,9 @@ class _AdminProfileScreenState extends State<Admin_Profile_Screen> {
 
     final double w = AppSize.width(context);
     final double h = AppSize.height(context);
-    final name = _userData?['name'] ?? "Admin";
+    final name = _userData?['fullName'] ?? _userData?['name'] ?? "Admin";
     final email = _userData?['email'] ?? "admin@smartattend.com";
-    final mobile = _userData?['mobile'] ?? "Not Provided";
+    final mobile = _userData?['phone'] ?? _userData?['mobile'] ?? "Not Provided";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),

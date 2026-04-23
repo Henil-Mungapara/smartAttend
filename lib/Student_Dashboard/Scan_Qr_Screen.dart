@@ -139,9 +139,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
         'recordId': recordId,
         'sessionId': sessionId,
         'studentId': uid,
-        'studentName': userData['name'] ?? "Unknown",
-        'enrollmentNo': userData['enrollmentNo'] ?? "N/A",
-        'rollNo': userData['rollNo'] ?? "N/A",
+        'studentName': userData['fullName'] ?? userData['name'] ?? "Unknown",
+        'enrollmentNo': userData['enrollmentNumber'] ?? userData['enrollmentNo'] ?? "N/A",
+        'rollNo': userData['rollNumber'] ?? userData['rollNo'] ?? "N/A",
         'subjectId': sessionData['subjectId'],
         'timestamp': FieldValue.serverTimestamp(),
         'status': 'Present'
