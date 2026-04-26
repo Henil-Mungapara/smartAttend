@@ -98,6 +98,12 @@ class _ViewDivisionScreenState extends State<ViewDivisionScreen> {
           "View Divisions",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            if (mounted) Navigator.pop(context);
+          },
+        ),
         centerTitle: true,
       ),
       body: Column(

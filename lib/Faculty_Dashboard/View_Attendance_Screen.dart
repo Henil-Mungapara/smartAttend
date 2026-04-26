@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import '../app_size/app_size.dart';
+import '../utils/Pdf_Report_Service.dart';
 
 class ViewAttendanceScreen extends StatefulWidget {
-  const ViewAttendanceScreen({super.key});
+  final String? initialSessionId;
+  const ViewAttendanceScreen({super.key, this.initialSessionId});
 
   @override
   State<ViewAttendanceScreen> createState() => _ViewAttendanceScreenState();
@@ -26,7 +28,11 @@ class _ViewAttendanceScreenState extends State<ViewAttendanceScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchSessions();
+    _fetchSessions().then((_) {
+      if (widget.initialSessionId != null && _sessions.any((s) => s['id'] == widget.initialSessionId)) {
+        _fetchAttendanceForSession(widget.initialSessionId!);
+      }
+    });
   }
 
   Future<void> _fetchSessions() async {
@@ -136,6 +142,22 @@ class _ViewAttendanceScreenState extends State<ViewAttendanceScreen> {
         backgroundColor: const Color(0xFF0047AB),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          if (_selectedSessionData != null && !_isLoadingAttendance)
+            IconButton(
+              icon: const Icon(Icons.picture_as_pdf),
+              onPressed: () async {
+                await PdfReportService.generateAndPrintAttendanceReport(
+                  subjectName: _selectedSessionData!['subjectName'],
+                  dateStr: _selectedSessionData!['dateStr'],
+                  totalStudents: _students.length,
+                  presentCount: presentCount,
+                  absentCount: absentCount,
+                  students: _students,
+                );
+              },
+            ),
+        ],
       ),
       backgroundColor: const Color(0xFFF5F7FA),
       body: SafeArea(

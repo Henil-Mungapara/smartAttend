@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../app_size/app_size.dart';
 import '../utils/UiHelper.dart';
 import 'Generate_Attendance_Dialog.dart';
+import 'View_Attendance_Screen.dart';
 
 class GenerateAttendanceScreen extends StatefulWidget {
   const GenerateAttendanceScreen({super.key});
@@ -15,6 +16,7 @@ class GenerateAttendanceScreen extends StatefulWidget {
 
 class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
   String? _activeSessionId;
+  String? _lastSessionId;
   Map<String, dynamic>? _sessionData;
   Timer? _countdownTimer;
   int _secondsRemaining = 0;
@@ -70,6 +72,7 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
         if (mounted) {
           UIHelper.showSnackBar(context, "Session Ended!");
           setState(() {
+            _lastSessionId = _activeSessionId;
             _activeSessionId = null;
             _sessionData = null;
           });
@@ -173,6 +176,27 @@ class _GenerateAttendanceScreenState extends State<GenerateAttendanceScreen> {
 
               if (_activeSessionId == null)
                 UIHelper.customButton(text: "Generate New QR", onPressed: _openGenerateDialog),
+              
+              if (_activeSessionId == null && _lastSessionId != null) ...[
+                SizedBox(height: h * 0.02),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewAttendanceScreen(initialSessionId: _lastSessionId),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.picture_as_pdf, color: Color(0xFF0047AB)),
+                  label: const Text("View & Download Report", style: TextStyle(color: Color(0xFF0047AB), fontSize: 16)),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFF0047AB)),
+                    padding: EdgeInsets.symmetric(vertical: h * 0.015, horizontal: w * 0.1),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                ),
+              ],
               
               if (_activeSessionId != null)
                 OutlinedButton(
