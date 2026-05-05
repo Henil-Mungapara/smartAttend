@@ -64,28 +64,36 @@ class _FacultyDashboardScreenState extends State<FacultyDashboardScreen> {
         }).toList();
       }
 
+      // Fetch all sessions for this faculty (no orderBy = no composite index needed)
+      final allSessionsSnap = await _firestore.collection('attendance_sessions')
+          .where('facultyId', isEqualTo: uid)
+          .get();
+
       DateTime now = DateTime.now();
       DateTime startOfDay = DateTime(now.year, now.month, now.day);
-      DateTime endOfDay = startOfDay.add(const Duration(days: 1));
 
-      final sessionsQuery = await _firestore.collection('attendance_sessions')
-          .where('facultyId', isEqualTo: uid)
-          .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
-          .where('timestamp', isLessThan: endOfDay)
-          .get();
+      // Count today's classes
+      _classesToday = allSessionsSnap.docs.where((doc) {
+        final raw = doc.data()['createdAt'];
+        if (raw is! Timestamp) return false;
+        final dt = raw.toDate();
+        return dt.isAfter(startOfDay) && dt.isBefore(startOfDay.add(const Duration(days: 1)));
+      }).length;
 
-      _classesToday = sessionsQuery.docs.length;
-
-      final recentSessions = await _firestore.collection('attendance_sessions')
-          .where('facultyId', isEqualTo: uid)
-          .orderBy('timestamp', descending: true)
-          .limit(3)
-          .get();
+      // Sort all sessions by createdAt descending, take top 3
+      final sortedDocs = allSessionsSnap.docs.toList()
+        ..sort((a, b) {
+          final aTs = a.data()['createdAt'];
+          final bTs = b.data()['createdAt'];
+          if (aTs is! Timestamp || bTs is! Timestamp) return 0;
+          return bTs.compareTo(aTs);
+        });
 
       List<Map<String, dynamic>> activities = [];
-      for (var session in recentSessions.docs) {
+      for (var session in sortedDocs.take(3)) {
         var sData = session.data();
-        DateTime ts = (sData['timestamp'] as Timestamp).toDate();
+        final raw = sData['createdAt'];
+        DateTime ts = raw is Timestamp ? raw.toDate() : DateTime.now();
         String timeStr = DateFormat('hh:mm a').format(ts);
         
         String subName = "Unknown Subject";
